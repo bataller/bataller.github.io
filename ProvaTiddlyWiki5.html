@@ -157,6 +157,8 @@ Error message and password prompt
 
 <li>$:/isEncrypted</li>
 
+<li>$:/macros/skeeve/dateTime.js</li>
+
 <li>$:/SiteSubtitle</li>
 
 <li>$:/SiteTitle</li>
@@ -180,6 +182,8 @@ Error message and password prompt
 <li>Draft of 'ProvaTiddlyWiki5'</li>
 
 <li>ProvaTiddlyWiki5</li>
+
+<li>Untitled 1</li>
 
 </ul>
 </p>
@@ -9584,18 +9588,96 @@ Error message and password prompt
 <div created="20200420104103392" modified="20200420171241837" title="$:/GitHub/Username">
 <pre>bataller</pre>
 </div>
-<div plugin-type="import" status="pending" title="$:/Import" type="application/json">
-<pre>{
-    &quot;tiddlers&quot;: {
-        &quot;Untitled 1&quot;: {
-            &quot;title&quot;: &quot;Untitled 1&quot;,
-            &quot;text&quot;: &quot;$:/macros/skeeve/dateTime.js&quot;
-        }
-    }
-}</pre>
+<div status="complete" title="$:/Import">
+<pre>The following tiddlers were imported:
+
+# [[Untitled 1]]
+# [[$:/macros/skeeve/dateTime.js]]</pre>
 </div>
 <div title="$:/isEncrypted">
 <pre>no</pre>
+</div>
+<div created="20140110061443770" creator="Stephan Hradek" modified="20141006061857030" modifier="Stephan Hradek" module-type="macro" title="$:/macros/skeeve/dateTime.js" type="application/javascript">
+<pre>/*\
+title: $:/macros/skeeve/dateTime.js
+type: application/javascript
+module-type: macro
+
+&lt;&lt;dateTime format date add&gt;&gt;
+
+Examples:
+&lt;&lt;dateTime&gt;&gt;
+&lt;&lt;dateTime &quot;YYYY-0MM-0DD 0hh:0mm:0ss&quot;&gt;&gt;
+&lt;$macrocall $name=&quot;dateTime&quot; ts={{!!created}} format=&quot;MMM DD. YY&quot;/&gt;
+
+Format Strings:
+Please find all format strings listed in the JavaScript code of function
+formatDateString in $:/core/modules/utils/utils.js
+
+Add String
+The add string may contain a sequence of integer numbers followed by a time unit. These numbers are added to the given timestamp. Time units are:
+&quot;Y&quot;, &quot;M&quot;, &quot;D&quot;, &quot;h&quot;, &quot;m&quot;, &quot;s&quot; for year, month, day, hour, minute, second.
+&quot;+&quot; and &quot;-&quot; before a number can be used to define whether to add (default) or subtract the number.
+It's also possible to put a &quot;=&quot; between the number and its unit to set a certain value as a date component.
+
+Examples
+Tomorrow in one year = &lt;&lt;dateTime &quot;&quot; &quot;&quot; &quot;1D 1Y&quot;&gt;&gt;
+One month ago = &lt;&lt;dateTime &quot;&quot; &quot;&quot; &quot;-1M&quot;&gt;&gt;
+Christmas last year = &lt;&lt;dateTime &quot;&quot; &quot;&quot; &quot;-1Y 12=M 24=D&quot;&gt;&gt;
+\*/
+(function(){
+
+/*jslint node: true, browser: true */
+/*global $tw: false */
+&quot;use strict&quot;;
+
+/*
+Information about this macro
+This is a macro to get formatted date and time
+*/
+
+exports.name = &quot;dateTime&quot;;
+
+exports.params = [
+	{ name: &quot;format&quot; },
+	{ name: &quot;ts&quot; },
+	{ name: &quot;add&quot; }
+];
+
+/*
+Run the macro
+*/
+exports.run = function(format, ts, add) {
+	if(!ts) {
+		ts = new Date;
+	}
+	else {
+		ts = $tw.utils.parseDate(ts);
+	}
+	while (add !== &quot;&quot;) {
+		var val= parseInt(add);
+		if(isNaN(val)) break;
+		add=add.replace(/^\s*([+\-]\s*)?\d+\s*/, &quot;&quot;);
+		var unit= add.charAt(0);
+		var set= unit === &quot;=&quot;;
+		if( set) unit= add.charAt(1);
+		add=add.replace(/^[^\d+\-]+/, &quot;&quot;);
+		switch(unit) {
+			case 'Y': ts.setFullYear(val + (set ? 0 : ts.getFullYear())); break;
+			case 'M': ts.setMonth(val + (set ? -1 : ts.getMonth())); break;
+			case 'D': ts.setDate(val + (set ? 0 : ts.getDate())); break;
+			case 'h': ts.setHour(val + (set ? 0 : ts.getHour())); break;
+			case 'm': ts.setMinute(val + (set ? 0 : ts.getMinute())); break;
+			case 's': ts.setSecond(val + (set ? 0 : ts.getSecond())); break;
+			default: break;
+		}
+	}
+	if(!format)
+		format = &quot;YYYY-0MM-0DD 0hh:0mm:0ss&quot;;
+	return $tw.utils.formatDateString(ts, format); 
+};
+
+})();</pre>
 </div>
 <div created="20200420104029456" modified="20200420170950566" title="$:/SiteSubtitle">
 <pre>ProvaTiddlyWiki5</pre>
@@ -9610,9 +9692,9 @@ Error message and password prompt
 <pre>$:/core/ui/ControlPanel/Saving/GitHub</pre>
 </div>
 <div title="$:/status/RequireReloadDueToPluginChange">
-<pre>no</pre>
+<pre>yes</pre>
 </div>
-<div created="20200420171127915" list="DateTime $:/ControlPanel [[Draft of 'ProvaTiddlyWiki5']] GettingStarted" modified="20200420173233617" title="$:/StoryList">
+<div created="20200420171127915" list="$:/Import DateTime $:/ControlPanel [[Draft of 'ProvaTiddlyWiki5']] GettingStarted" modified="20200420173233617" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9790,6 +9872,9 @@ Error message and password prompt
 </div>
 <div created="20200420171036388" modified="20200420171110416" nom="Angel Brossa" tags="" title="ProvaTiddlyWiki5">
 <pre>{{ProvaTiddlyWiki5!!nom}}</pre>
+</div>
+<div title="Untitled 1">
+<pre>$:/macros/skeeve/dateTime.js</pre>
 </div>
 
 
